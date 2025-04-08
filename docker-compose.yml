@@ -11,7 +11,7 @@ services:
         # Set VITE_BACKEND_URL to the backend's URL if it's on a different host
         # VITE_BACKEND_URL: http://backend:5000
     ports:
-      - "3000:80" # Expose frontend on port 3000
+      - "8882:80" # Expose frontend on port 3000
     networks:
       - app-network
 
@@ -27,7 +27,7 @@ services:
       STORAGE_PATH: /streams/
       # BACKEND_URL: http://localhost:5000 # Optional override
     ports:
-      - "4000:5000" # Expose backend on port 5000
+      - "8881:5000" # Expose backend on port 5000
     networks:
       - app-network
 
