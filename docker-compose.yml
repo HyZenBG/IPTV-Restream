@@ -1,20 +1,17 @@
 version: "3.9"
+
 services:
   iptv_restream_frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        # Set this to the server ip/domain, if your backend is deployed on a different server
-        #VITE_BACKEND_URL: http://123.123.123.123:5000
         VITE_STREAM_DELAY: 18
         VITE_STREAM_PROXY_DELAY: 30
-        # Optional settings for synchronization
-        #VITE_SYNCHRONIZATION_TOLERANCE: 0.8
-        #VITE_SYNCHRONIZATION_MAX_DEVIATION: 4
-        #VITE_SYNCHRONIZATION_ADJUSTMENT: 0.06
-        #VITE_SYNCHRONIZATION_MAX_ADJUSTMENT: 0.16
-
+        # Set VITE_BACKEND_URL to the backend's URL if it's on a different host
+        # VITE_BACKEND_URL: http://backend:5000
+    ports:
+      - "3000:80" # Expose frontend on port 3000
     networks:
       - app-network
 
@@ -28,19 +25,9 @@ services:
       - channels:/channels
     environment:
       STORAGE_PATH: /streams/
-      # If you have problems with the playlist, set the backend url manually here
-      #BACKEND_URL: http://localhost:5000
-    networks:
-      - app-network
-
-  # Nginx Reverse Proxy
-  iptv_restream_nginx:
-    image: nginx:alpine
-    volumes:
-      - ./deployment/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - streams_data:/streams
+      # BACKEND_URL: http://localhost:5000 # Optional override
     ports:
-      - "80:80"
+      - "5000:5000" # Expose backend on port 5000
     networks:
       - app-network
 
@@ -52,7 +39,6 @@ volumes:
       device: tmpfs
   channels:
 
-# Internal docker network
 networks:
   app-network:
     driver: bridge
